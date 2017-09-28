@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
-MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
+MESSAGE("-- Build type: " ${CMAKE_BUILD_TYPE})
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -march=native")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
@@ -26,6 +26,7 @@ endif()
 
 # Packages required to work with the library
 find_package(OpenCV REQUIRED) # OpenCV
+find_package(Boost REQUIRED)
 find_package(OpenMP REQUIRED) # OpenMP
 if (OPENMP_FOUND)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -33,12 +34,15 @@ if (OPENMP_FOUND)
 endif()
 
 include_directories(include
-                    ${OpenCV_INCLUDE_DIRS})
+                    ${OpenCV_INCLUDE_DIRS}
+                    ${Boost_INCLUDE_DIRS})
 
-link_directories(${OpenCV_LIBRARIES})
+link_directories(${OpenCV_LIBRARIES}
+                 ${Boost_LIBRARIES})
 
-# Targets
-
-# add_library(obindex2)
-# target_link_libraries(obindex2
-#                       ${OpenCV_LIBRARIES})
+### Targets ###
+add_library(obindex2
+            src/binary_descriptor.cc)
+target_link_libraries(obindex2
+                      ${OpenCV_LIBRARIES}
+                      ${Boost_LIBRARIES})
