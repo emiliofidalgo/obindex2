@@ -1,2 +1,2 @@
-# obindex2
+# OBINDEX 2.0
 Online Binary Image Index
