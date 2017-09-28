@@ -71,7 +71,7 @@ class BinaryDescriptor {
   cv::Mat toCvMat();
   std::string toString();
 
-  // For simplicity, we made it public
+  // For simplicity, we made it public, but you should use the methods.
   Bitset bitset_;
 };
 
