@@ -61,6 +61,11 @@ class BinaryDescriptor {
     return distance == 0;
   }
 
+  inline bool operator!=(const BinaryDescriptor& d) {
+    int distance = (bitset_^d.bitset_).count();
+    return distance != 0;
+  }
+
   inline BinaryDescriptor& operator=(const BinaryDescriptor& other) {
     assert(size() == other.size());
     bitset_.clear();
