@@ -1,6 +1,9 @@
 project(obindex2 LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
+# Compile tests or not
+option(EnableTesting "EnableTesting" ON)
+
 # Setting build type to Release
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
@@ -34,11 +37,16 @@ if (OPENMP_FOUND)
 endif()
 
 include_directories(include
+                    external
                     ${OpenCV_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS})
 
 link_directories(${OpenCV_LIBRARIES}
                  ${Boost_LIBRARIES})
+
+# Copy test image to the binary directory
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/image.jpg
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ### Targets ###
 add_library(obindex2
@@ -46,3 +54,13 @@ add_library(obindex2
 target_link_libraries(obindex2
                       ${OpenCV_LIBRARIES}
                       ${Boost_LIBRARIES})
+
+### Testing ###
+if (${EnableTesting} STREQUAL "ON")
+  # Test for BinaryDescriptor class
+  add_executable(test_bdesc tests/test_bdesc.cc)
+  target_link_libraries(test_bdesc obindex2)
+
+  enable_testing(true)  # Enables unit-testing.
+  add_test(NAME test_bdesc COMMAND test_bdesc)
+endif()
