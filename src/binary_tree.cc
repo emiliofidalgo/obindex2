@@ -22,7 +22,7 @@
 
 namespace obindex2 {
 
-  BinaryTree::BinaryTree(BinaryDescriptorSet* dset,
+  BinaryTree::BinaryTree(BinaryDescriptorSetPtr dset,
                          const unsigned tree_id,
                          const unsigned k,
                          const unsigned s) :
@@ -46,7 +46,7 @@ namespace obindex2 {
     deleteTree();
 
     // Creating the root node
-    root_ = new BinaryTreeNode();
+    root_ = std::make_shared<BinaryTreeNode>();
     nset_.insert(root_);
 
     // Generating a new set with the descriptor's ids
@@ -55,7 +55,7 @@ namespace obindex2 {
     buildNode(descs, root_);
   }
 
-  void BinaryTree::buildNode(BinaryDescriptorSet dset, BinaryTreeNode* root) {
+  void BinaryTree::buildNode(BinaryDescriptorSet dset, BinaryTreeNodePtr root) {
     // Validate if this should be a leaf node
     if (dset.size() < s_) {
       // We set the previous node as a leaf
@@ -69,12 +69,12 @@ namespace obindex2 {
     } else {
       // This node should be split
       // Randomly selecting the new centers
-      std::vector<BinaryDescriptor*> new_centers;
+      std::vector<BinaryDescriptorPtr> new_centers;
       std::vector<BinaryDescriptorSet> assoc_descs(k_);
 
       for (unsigned i = 0; i < k_; i++) {
         // Selecting a new center
-        BinaryDescriptor* desc = *std::next(dset.begin(),
+        BinaryDescriptorPtr desc = *std::next(dset.begin(),
                                             rand() % dset.size());
         new_centers.push_back(desc);
         assoc_descs[i].insert(desc);
@@ -83,7 +83,7 @@ namespace obindex2 {
 
       // Associating the remaining descriptors to the new centers
       for (auto it = dset.begin(); it != dset.end(); it++) {
-        BinaryDescriptor* d = *it;
+        BinaryDescriptorPtr d = *it;
         int best_center = -1;
         double min_dist = DBL_MAX;
         for (unsigned i = 0; i < k_; i++) {
@@ -104,7 +104,9 @@ namespace obindex2 {
 
       // Creating a new tree node for each new cluster
       for (unsigned i = 0; i < k_; i++) {
-        BinaryTreeNode* node = new BinaryTreeNode(false, new_centers[i]);
+        BinaryTreeNodePtr node = std::make_shared<BinaryTreeNode>(
+                  false,
+                  new_centers[i]);
 
         // Linking this node with its root
         root->addChildNode(node);
@@ -119,48 +121,51 @@ namespace obindex2 {
   }
 
   void BinaryTree::deleteTree() {
-    // if (nset_.size() > 0) {
-    //   // Deleting tree nodes
-    //   for (auto it = nset_.begin(); it != nset_.end(); it++) {
-    //     BinaryTreeNode* node = *it;
-    //     delete node;
-    //   }
+    if (nset_.size() > 0) {
+      nset_.clear();
+      // Deleting tree nodes
+      // for (auto it = nset_.begin(); it != nset_.end(); it++) {
+      //   BinaryTreeNode* node = *it;
+      //   delete node;
+      // }
 
-    //   // Invalidating pointers
-    //   root_ = nullptr;
-    // }
+
+
+      // Invalidating pointers
+      root_ = nullptr;
+    }
   }
 
-  void BinaryTree::traverseFromRoot(BinaryDescriptor* q,
-                                    PriorityQueueNode* pq,
-                                    PriorityQueueDescriptor* r) {
+  void BinaryTree::traverseFromRoot(BinaryDescriptorPtr q,
+                                    PriorityQueueNodePtr pq,
+                                    PriorityQueueDescriptorPtr r) {
     traverseFromNode(q, root_, pq, r);
   }
 
-  void BinaryTree::traverseFromNode(BinaryDescriptor* q,
-                                    BinaryTreeNode* n,
-                                    PriorityQueueNode* pq,
-                                    PriorityQueueDescriptor* r) {
+  void BinaryTree::traverseFromNode(BinaryDescriptorPtr q,
+                                    BinaryTreeNodePtr n,
+                                    PriorityQueueNodePtr pq,
+                                    PriorityQueueDescriptorPtr r) {
     // If its a leaf node, the search ends
     if (n->isLeaf()) {
       // Adding points to R
-      std::vector<BinaryDescriptor*>* descs = n->getChildrenDescriptors();
+      std::vector<BinaryDescriptorPtr>* descs = n->getChildrenDescriptors();
       for (unsigned i = 0; i < descs->size(); i++) {
-        BinaryDescriptor* d = (*descs)[i];
+        BinaryDescriptorPtr d = (*descs)[i];
         double dist = obindex2::BinaryDescriptor::distHamming(*q, *d);
         PQItemDescriptor item(dist, d);
         r->push(item);
       }
     } else {
       // Search continues
-      std::vector<BinaryTreeNode*>* nodes = n->getChildrenNodes();
+      std::vector<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
       int best_node = -1;
       double min_dist = DBL_MAX;
 
       // Computing distances to nodes
       std::vector<double> distances(nodes->size());
       for (unsigned i = 0; i < nodes->size(); i++) {
-        BinaryTreeNode* bn = (*nodes)[i];
+        BinaryTreeNodePtr bn = (*nodes)[i];
         double dist = bn->distance(q);
         distances[i] = dist;
 
@@ -174,7 +179,7 @@ namespace obindex2 {
 
       // Adding remaining nodes to pq
       for (unsigned i = 0; i < nodes->size(); i++) {
-        BinaryTreeNode* bn = (*nodes)[i];
+        BinaryTreeNodePtr bn = (*nodes)[i];
         // It is the best node?
         if (i == static_cast<unsigned>(best_node)) {
           continue;
@@ -193,7 +198,7 @@ namespace obindex2 {
     printNode(root_);
   }
 
-  void BinaryTree::printNode(BinaryTreeNode* n) {
+  void BinaryTree::printNode(BinaryTreeNodePtr n) {
     std::cout << "---" << std::endl;
     std::cout << "Node: " << n << std::endl;
     std::cout << (n->isLeaf() ? "Leaf" : "Node") << std::endl;
@@ -203,7 +208,7 @@ namespace obindex2 {
                              n->childDescriptorSize() << std::endl;
     } else {
       std::cout << "Children nodes: " << n->childNodeSize() << std::endl;
-      std::vector<BinaryTreeNode*>* nodes = n->getChildrenNodes();
+      std::vector<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
       for (unsigned i = 0; i < nodes->size(); i++) {
         printNode((*nodes)[i]);
       }

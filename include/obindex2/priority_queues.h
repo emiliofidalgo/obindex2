@@ -35,14 +35,14 @@ struct PQItemNode {
  public:
   inline explicit PQItemNode(const double d,
                              const unsigned id,
-                             BinaryTreeNode* n) :
+                             BinaryTreeNodePtr n) :
     dist(d),
     tree_id(id),
     node(n) {}
 
   double dist;
   unsigned tree_id;
-  BinaryTreeNode* node;
+  BinaryTreeNodePtr node;
 };
 
 class CompareNode {
@@ -55,15 +55,16 @@ class CompareNode {
 typedef std::priority_queue<PQItemNode,
                        std::vector<PQItemNode>,
                        CompareNode> PriorityQueueNode;
+typedef std::shared_ptr<PriorityQueueNode> PriorityQueueNodePtr;
 
 struct PQItemDescriptor {
  public:
-  inline explicit PQItemDescriptor(const double d, BinaryDescriptor* bd) :
+  inline explicit PQItemDescriptor(const double d, BinaryDescriptorPtr bd) :
     dist(d),
     desc(bd) {}
 
   double dist;
-  BinaryDescriptor* desc;
+  BinaryDescriptorPtr desc;
 };
 
 class CompareDescriptor {
@@ -76,6 +77,7 @@ class CompareDescriptor {
 typedef std::priority_queue<PQItemDescriptor,
                        std::vector<PQItemDescriptor>,
                        CompareDescriptor> PriorityQueueDescriptor;
+typedef std::shared_ptr<PriorityQueueDescriptor> PriorityQueueDescriptorPtr;
 
 }  // namespace obindex2
 

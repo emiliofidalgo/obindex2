@@ -21,6 +21,7 @@
 #ifndef INCLUDE_OBINDEX2_BINARY_DESCRIPTOR_H_
 #define INCLUDE_OBINDEX2_BINARY_DESCRIPTOR_H_
 
+#include <memory>
 #include <string>
 #include <sstream>
 #include <unordered_set>
@@ -81,7 +82,9 @@ class BinaryDescriptor {
   Bitset bitset_;
 };
 
-typedef std::unordered_set<BinaryDescriptor*> BinaryDescriptorSet;
+typedef std::shared_ptr<BinaryDescriptor> BinaryDescriptorPtr;
+typedef std::unordered_set<BinaryDescriptorPtr> BinaryDescriptorSet;
+typedef std::shared_ptr<BinaryDescriptorSet> BinaryDescriptorSetPtr;
 
 }  // namespace obindex2
 

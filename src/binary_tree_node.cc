@@ -27,7 +27,7 @@ namespace obindex2 {
     desc_(nullptr) {
   }
 
-  BinaryTreeNode::BinaryTreeNode(const bool leaf, BinaryDescriptor* desc) :
+  BinaryTreeNode::BinaryTreeNode(const bool leaf, BinaryDescriptorPtr desc) :
     is_leaf_(leaf),
     desc_(desc) {
   }

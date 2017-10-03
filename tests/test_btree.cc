@@ -43,27 +43,33 @@ int main() {
   obindex2::BinaryDescriptorSet set;
   for (int i = 0; i < descs.rows; i++) {
     cv::Mat desc = descs.row(i);
-    obindex2::BinaryDescriptor* d =
-      new obindex2::BinaryDescriptor(desc);
+    obindex2::BinaryDescriptorPtr d =
+      std::make_shared<obindex2::BinaryDescriptor>(desc);
     set.insert(d);
   }
 
-  obindex2::BinaryTree tree1(&set);
+  obindex2::BinaryTree tree1(std::make_shared<
+                             obindex2::BinaryDescriptorSet>(set));
+
+  tree1.deleteTree();
+  tree1.buildTree();
 
   // Searching in the tree
   for (auto it = set.begin(); it != set.end(); it++) {
-    obindex2::BinaryDescriptor* q = *it;
-    obindex2::PriorityQueueNode pq;
-    obindex2::PriorityQueueDescriptor r;
+    obindex2::BinaryDescriptorPtr q = *it;
+    obindex2::PriorityQueueNodePtr pq = std::make_shared<
+                                          obindex2::PriorityQueueNode>();
+    obindex2::PriorityQueueDescriptorPtr r = std::make_shared<
+                                          obindex2::PriorityQueueDescriptor>();
 
-    tree1.traverseFromRoot(q, &pq, &r);
+    tree1.traverseFromRoot(q, pq, r);
 
     std::cout << "---" << std::endl;
 
-    while (!r.empty()) {
-     std::cout << r.top().dist << " " <<
-          r.top().desc << " vs " << q << std::endl;
-     r.pop();
+    while (!r->empty()) {
+     std::cout << r->top().dist << " " <<
+          r->top().desc << " vs " << q << std::endl;
+     r->pop();
     }
   }
 

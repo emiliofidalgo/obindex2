@@ -28,11 +28,14 @@
 
 namespace obindex2 {
 
+class BinaryTreeNode;
+typedef std::shared_ptr<BinaryTreeNode> BinaryTreeNodePtr;
+
 class BinaryTreeNode {
  public:
   // Constructors
   BinaryTreeNode();
-  explicit BinaryTreeNode(const bool leaf, BinaryDescriptor* desc);
+  explicit BinaryTreeNode(const bool leaf, BinaryDescriptorPtr desc);
 
   // Methods
   inline bool isLeaf() {
@@ -43,23 +46,23 @@ class BinaryTreeNode {
     is_leaf_ = leaf;
   }
 
-  inline BinaryDescriptor* getDescriptor() {
+  inline BinaryDescriptorPtr getDescriptor() {
     return desc_;
   }
 
-  inline void setDescriptor(BinaryDescriptor* desc) {
+  inline void setDescriptor(BinaryDescriptorPtr desc) {
     desc_ = desc;
   }
 
-  inline double distance(BinaryDescriptor* desc) {
+  inline double distance(BinaryDescriptorPtr desc) {
     return obindex2::BinaryDescriptor::distHamming(*desc_, *desc);
   }
 
-  inline void addChildNode(BinaryTreeNode* child) {
+  inline void addChildNode(BinaryTreeNodePtr child) {
     ch_nodes_.push_back(child);
   }
 
-  inline std::vector<BinaryTreeNode*>* getChildrenNodes() {
+  inline std::vector<BinaryTreeNodePtr>* getChildrenNodes() {
     return &ch_nodes_;
   }
 
@@ -67,11 +70,11 @@ class BinaryTreeNode {
     return ch_nodes_.size();
   }
 
-  inline void addChildDescriptor(BinaryDescriptor* child) {
+  inline void addChildDescriptor(BinaryDescriptorPtr child) {
     ch_descs_.push_back(child);
   }
 
-  inline std::vector<BinaryDescriptor*>* getChildrenDescriptors() {
+  inline std::vector<BinaryDescriptorPtr>* getChildrenDescriptors() {
     return &ch_descs_;
   }
 
@@ -81,12 +84,12 @@ class BinaryTreeNode {
 
  private:
   bool is_leaf_;
-  BinaryDescriptor* desc_;
-  std::vector<BinaryTreeNode*> ch_nodes_;
-  std::vector<BinaryDescriptor*> ch_descs_;
+  BinaryDescriptorPtr desc_;
+  std::vector<BinaryTreeNodePtr> ch_nodes_;
+  std::vector<BinaryDescriptorPtr> ch_descs_;
 };
 
-typedef std::unordered_set<BinaryTreeNode*> NodeSet;
+typedef std::unordered_set<BinaryTreeNodePtr> NodeSet;
 
 }  // namespace obindex2
 

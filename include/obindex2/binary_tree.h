@@ -35,7 +35,7 @@ namespace obindex2 {
 class BinaryTree {
  public:
   // Constructors
-  explicit BinaryTree(BinaryDescriptorSet* dset,
+  explicit BinaryTree(BinaryDescriptorSetPtr dset,
                       const unsigned tree_id = 0,
                       const unsigned k = 16,
                       const unsigned s = 150);
@@ -44,25 +44,25 @@ class BinaryTree {
   // Methods
   void buildTree();
   void deleteTree();
-  void traverseFromRoot(BinaryDescriptor* q,
-                        PriorityQueueNode* pq,
-                        PriorityQueueDescriptor* r);
-  void traverseFromNode(BinaryDescriptor* q,
-                        BinaryTreeNode* n,
-                        PriorityQueueNode* pq,
-                        PriorityQueueDescriptor* r);
+  void traverseFromRoot(BinaryDescriptorPtr q,
+                        PriorityQueueNodePtr pq,
+                        PriorityQueueDescriptorPtr r);
+  void traverseFromNode(BinaryDescriptorPtr q,
+                        BinaryTreeNodePtr n,
+                        PriorityQueueNodePtr pq,
+                        PriorityQueueDescriptorPtr r);
   void printTree();
 
  private:
-  BinaryDescriptorSet* dset_;
+  BinaryDescriptorSetPtr dset_;
   unsigned tree_id_;
-  BinaryTreeNode* root_;
+  BinaryTreeNodePtr root_;
   unsigned k_;
   unsigned s_;
   NodeSet nset_;
 
-  void buildNode(BinaryDescriptorSet d, BinaryTreeNode* root);
-  void printNode(BinaryTreeNode* n);
+  void buildNode(BinaryDescriptorSet d, BinaryTreeNodePtr root);
+  void printNode(BinaryTreeNodePtr n);
 };
 
 }  // namespace obindex2
