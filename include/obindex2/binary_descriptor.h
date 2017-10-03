@@ -23,6 +23,7 @@
 
 #include <string>
 #include <sstream>
+#include <unordered_set>
 
 #include <boost/dynamic_bitset.hpp>
 #include <opencv2/opencv.hpp>
@@ -79,6 +80,8 @@ class BinaryDescriptor {
   // For simplicity, we made it public, but you should use the methods.
   Bitset bitset_;
 };
+
+typedef std::unordered_set<BinaryDescriptor*> BinaryDescriptorSet;
 
 }  // namespace obindex2
 

@@ -50,7 +50,10 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/image.jpg
 
 ### Targets ###
 add_library(obindex2
-            src/binary_descriptor.cc)
+            src/binary_descriptor.cc
+            src/binary_tree_node.cc
+            include/obindex2/priority_queues.h
+            src/binary_tree.cc)
 target_link_libraries(obindex2
                       ${OpenCV_LIBRARIES}
                       ${Boost_LIBRARIES})
@@ -61,6 +64,11 @@ if (${EnableTesting} STREQUAL "ON")
   add_executable(test_bdesc tests/test_bdesc.cc)
   target_link_libraries(test_bdesc obindex2)
 
+  # Test for BinaryTree class
+  add_executable(test_btree tests/test_btree.cc)
+  target_link_libraries(test_btree obindex2)
+
   enable_testing(true)  # Enables unit-testing.
   add_test(NAME test_bdesc COMMAND test_bdesc)
+  add_test(NAME test_btree COMMAND test_btree)
 endif()
