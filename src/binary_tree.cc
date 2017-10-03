@@ -123,15 +123,8 @@ namespace obindex2 {
   void BinaryTree::deleteTree() {
     if (nset_.size() > 0) {
       nset_.clear();
-      // Deleting tree nodes
-      // for (auto it = nset_.begin(); it != nset_.end(); it++) {
-      //   BinaryTreeNode* node = *it;
-      //   delete node;
-      // }
 
-
-
-      // Invalidating pointers
+      // Invalidating last reference to root
       root_ = nullptr;
     }
   }
