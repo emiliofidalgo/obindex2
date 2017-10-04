@@ -65,6 +65,8 @@ class BinaryTree {
   void printNode(BinaryTreeNodePtr n);
 };
 
+typedef std::shared_ptr<BinaryTree> BinaryTreePtr;
+
 }  // namespace obindex2
 
 #endif  // INCLUDE_OBINDEX2_BINARY_TREE_H_
