@@ -60,9 +60,13 @@ class BinaryTree {
   unsigned k_;
   unsigned s_;
   NodeSet nset_;
+  std::unordered_map<BinaryDescriptorPtr, BinaryTreeNodePtr> desc_to_node;
 
   void buildNode(BinaryDescriptorSet d, BinaryTreeNodePtr root);
   void printNode(BinaryTreeNodePtr n);
+  inline BinaryTreeNodePtr getNode(BinaryDescriptorPtr d) {
+    return desc_to_node[d];
+  }
 };
 
 typedef std::shared_ptr<BinaryTree> BinaryTreePtr;

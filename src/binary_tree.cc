@@ -61,9 +61,12 @@ namespace obindex2 {
 
       // Adding descriptors as leaf nodes
       for (auto it = dset.begin(); it != dset.end(); it++) {
-        root->addChildDescriptor(*it);
-      }
+        BinaryDescriptorPtr d = *it;
+        root->addChildDescriptor(d);
 
+        // Storing the reference of the node where the descriptor hangs
+        desc_to_node[d] = root;
+      }
     } else {
       // This node should be split
       // Randomly selecting the new centers
