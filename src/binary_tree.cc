@@ -104,7 +104,8 @@ namespace obindex2 {
       for (unsigned i = 0; i < k_; i++) {
         BinaryTreeNodePtr node = std::make_shared<BinaryTreeNode>(
                   false,
-                  new_centers[i]);
+                  new_centers[i],
+                  root);
 
         // Linking this node with its root
         root->addChildNode(node);

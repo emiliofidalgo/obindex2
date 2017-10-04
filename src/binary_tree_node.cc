@@ -24,12 +24,16 @@ namespace obindex2 {
 
   BinaryTreeNode::BinaryTreeNode() :
     is_leaf_(false),
-    desc_(nullptr) {
+    desc_(nullptr),
+    root_(nullptr) {
   }
 
-  BinaryTreeNode::BinaryTreeNode(const bool leaf, BinaryDescriptorPtr desc) :
+  BinaryTreeNode::BinaryTreeNode(const bool leaf,
+                                 BinaryDescriptorPtr desc,
+                                 BinaryTreeNodePtr root) :
     is_leaf_(leaf),
-    desc_(desc) {
+    desc_(desc),
+    root_(root) {
   }
 
 }  // namespace obindex2

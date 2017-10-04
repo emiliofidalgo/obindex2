@@ -35,7 +35,9 @@ class BinaryTreeNode {
  public:
   // Constructors
   BinaryTreeNode();
-  explicit BinaryTreeNode(const bool leaf, BinaryDescriptorPtr desc);
+  explicit BinaryTreeNode(const bool leaf,
+                          BinaryDescriptorPtr desc = nullptr,
+                          BinaryTreeNodePtr root = nullptr);
 
   // Methods
   inline bool isLeaf() {
@@ -52,6 +54,14 @@ class BinaryTreeNode {
 
   inline void setDescriptor(BinaryDescriptorPtr desc) {
     desc_ = desc;
+  }
+
+  inline BinaryTreeNodePtr getRoot() {
+    return root_;
+  }
+
+  inline void setRoot(BinaryTreeNodePtr root) {
+    root_ = root;
   }
 
   inline double distance(BinaryDescriptorPtr desc) {
@@ -85,6 +95,7 @@ class BinaryTreeNode {
  private:
   bool is_leaf_;
   BinaryDescriptorPtr desc_;
+  BinaryTreeNodePtr root_;
   std::vector<BinaryTreeNodePtr> ch_nodes_;
   std::vector<BinaryDescriptorPtr> ch_descs_;
 };
