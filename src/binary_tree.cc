@@ -31,6 +31,10 @@ namespace obindex2 {
     root_(nullptr),
     k_(k),
     s_(s) {
+      // Validating the corresponding parameters
+      assert(k_ > 1);
+      assert(k_ < s_);
+
       srand(time(NULL));
       buildTree();
   }
