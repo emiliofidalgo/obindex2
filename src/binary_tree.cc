@@ -31,10 +31,6 @@ namespace obindex2 {
     root_(nullptr),
     k_(k),
     s_(s) {
-      // Validating the corresponding parameters
-      assert(k_ > 1);
-      assert(k_ < s_);
-
       srand(time(NULL));
       buildTree();
   }
@@ -44,8 +40,6 @@ namespace obindex2 {
   }
 
   void BinaryTree::buildTree() {
-    assert(k_ < dset_.size());
-
     // Deleting the previous tree, if exists any
     deleteTree();
 
