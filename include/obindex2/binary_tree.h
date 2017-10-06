@@ -55,6 +55,7 @@ class BinaryTree {
   BinaryTreeNodePtr searchFromNode(BinaryDescriptorPtr q,
                                    BinaryTreeNodePtr n);
   void addDescriptor(BinaryDescriptorPtr q);
+  void deleteDescriptor(BinaryDescriptorPtr q);
   void printTree();
 
  private:
@@ -64,13 +65,11 @@ class BinaryTree {
   unsigned k_;
   unsigned s_;
   NodeSet nset_;
-  std::unordered_map<BinaryDescriptorPtr, BinaryTreeNodePtr> desc_to_node;
+  std::unordered_map<BinaryDescriptorPtr, BinaryTreeNodePtr> desc_to_node_;
 
   void buildNode(BinaryDescriptorSet d, BinaryTreeNodePtr root);
   void printNode(BinaryTreeNodePtr n);
-  inline BinaryTreeNodePtr getNode(BinaryDescriptorPtr d) {
-    return desc_to_node[d];
-  }
+  void deleteNodeRecursive(BinaryTreeNodePtr n);
 };
 
 typedef std::shared_ptr<BinaryTree> BinaryTreePtr;

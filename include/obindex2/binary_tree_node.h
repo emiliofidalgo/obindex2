@@ -100,6 +100,10 @@ class BinaryTreeNode {
     return ch_descs_.size();
   }
 
+  inline void selectNewCenter() {
+    desc_ = *std::next(ch_descs_.begin(), rand() % ch_descs_.size());
+  }
+
  private:
   bool is_leaf_;
   BinaryDescriptorPtr desc_;

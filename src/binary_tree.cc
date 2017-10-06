@@ -65,7 +65,7 @@ namespace obindex2 {
         root->addChildDescriptor(d);
 
         // Storing the reference of the node where the descriptor hangs
-        desc_to_node[d] = root;
+        desc_to_node_[d] = root;
       }
     } else {
       // This node should be split
@@ -125,6 +125,7 @@ namespace obindex2 {
   void BinaryTree::deleteTree() {
     if (nset_.size() > 0) {
       nset_.clear();
+      desc_to_node_.clear();
 
       // Invalidating last reference to root
       root_ = nullptr;
@@ -237,7 +238,7 @@ namespace obindex2 {
       // There is enough space at this node for this descriptor, so we add it
       n->addChildDescriptor(q);
       // Storing the reference of the node where the descriptor hangs
-      desc_to_node[q] = n;
+      desc_to_node_[q] = n;
     } else {
       // This node should be split
       n->setLeaf(false);
@@ -254,6 +255,44 @@ namespace obindex2 {
 
       // Rebuilding this node
       buildNode(set, n);
+    }
+  }
+
+  void BinaryTree::deleteDescriptor(BinaryDescriptorPtr q) {
+    // We get the node where the descriptor is stored
+    BinaryTreeNodePtr node = desc_to_node_[q];
+    assert(n->isLeaf());
+
+    // We remove q from the node
+    node->deleteChildDescriptor(q);
+
+    if (node->childDescriptorSize() > 0) {
+      // We select a new center, if required
+      if (node->getDescriptor() == q) {
+        // Selecting a new center
+        node->selectNewCenter();
+      }
+    } else {
+      // Otherwise, we need to remove the node
+      BinaryTreeNodePtr parent = node->getRoot();
+      parent->deleteChildNode(node);
+      nset_.erase(node);
+
+      deleteNodeRecursive(parent);
+    }
+
+    desc_to_node_.erase(q);
+  }
+
+  void BinaryTree::deleteNodeRecursive(BinaryTreeNodePtr n) {
+    assert(!n->isLeaf());
+    if (n->childNodeSize() == 0 && n != root_) {
+      // We remove
+      BinaryTreeNodePtr parent = n->getRoot();
+      parent->deleteChildNode(n);
+      nset_.erase(n);
+
+      deleteNodeRecursive(parent);
     }
   }
 

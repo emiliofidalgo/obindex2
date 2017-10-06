@@ -54,6 +54,16 @@ int main() {
   tree1.deleteTree();
   tree1.buildTree();
 
+  // Deleting descriptors
+  for (auto it = set.begin(); it != set.end(); it++) {
+    obindex2::BinaryDescriptorPtr d = *it;
+    tree1.deleteDescriptor(d);
+  }
+
+  tree1.printTree();
+
+  tree1.buildTree();
+
   // Searching in the tree
   for (auto it = set.begin(); it != set.end(); it++) {
     obindex2::BinaryDescriptorPtr q = *it;
