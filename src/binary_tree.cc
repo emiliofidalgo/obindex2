@@ -144,48 +144,116 @@ namespace obindex2 {
     // If its a leaf node, the search ends
     if (n->isLeaf()) {
       // Adding points to R
-      std::vector<BinaryDescriptorPtr>* descs = n->getChildrenDescriptors();
-      for (unsigned i = 0; i < descs->size(); i++) {
-        BinaryDescriptorPtr d = (*descs)[i];
+      std::unordered_set<BinaryDescriptorPtr>* descs =
+                                                    n->getChildrenDescriptors();
+      for (auto it = (*descs).begin(); it != (*descs).end(); it++) {
+        BinaryDescriptorPtr d = *it;
         double dist = obindex2::BinaryDescriptor::distHamming(*q, *d);
         PQItemDescriptor item(dist, d);
         r->push(item);
       }
     } else {
       // Search continues
-      std::vector<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
+      std::unordered_set<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
       int best_node = -1;
       double min_dist = DBL_MAX;
 
       // Computing distances to nodes
-      std::vector<double> distances(nodes->size());
-      for (unsigned i = 0; i < nodes->size(); i++) {
-        BinaryTreeNodePtr bn = (*nodes)[i];
+      std::vector<PQItemNode> items;
+      unsigned node_id = 0;
+      // Computing distances to nodes
+      for (auto it = (*nodes).begin(); it != (*nodes).end(); it++) {
+        BinaryTreeNodePtr bn = *it;
         double dist = bn->distance(q);
-        distances[i] = dist;
+        PQItemNode item(dist, tree_id_, bn);
+        items.push_back(item);
 
         if (dist < min_dist) {
           min_dist = dist;
-          best_node = i;
+          best_node = node_id;
         }
+
+        node_id++;
       }
 
       assert(best_node != -1);
 
       // Adding remaining nodes to pq
-      for (unsigned i = 0; i < nodes->size(); i++) {
-        BinaryTreeNodePtr bn = (*nodes)[i];
-        // It is the best node?
+      for (unsigned i = 0; i < items.size(); i++) {
+        // Is it the best node?
         if (i == static_cast<unsigned>(best_node)) {
           continue;
         }
 
-        PQItemNode item(distances[i], tree_id_, bn);
-        pq->push(item);
+        pq->push(items[i]);
       }
 
       // Traversing the best node
-      traverseFromNode(q, (*nodes)[best_node], pq, r);
+      traverseFromNode(q, items[best_node].node, pq, r);
+    }
+  }
+
+  BinaryTreeNodePtr BinaryTree::searchFromRoot(BinaryDescriptorPtr q) {
+    return searchFromNode(q, root_);
+  }
+
+  BinaryTreeNodePtr BinaryTree::searchFromNode(BinaryDescriptorPtr q,
+                                               BinaryTreeNodePtr n) {
+    // If it's a leaf node, the search ends
+    if (n->isLeaf()) {
+      // This is the node where this descriptor should be included
+      return n;
+    } else {
+      // Search continues
+      std::unordered_set<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
+      int best_node = -1;
+      double min_dist = DBL_MAX;
+
+      // Computing distances to nodes
+      std::vector<BinaryTreeNodePtr> items;
+      // Computing distances to nodes
+      for (auto it = (*nodes).begin(); it != (*nodes).end(); it++) {
+        BinaryTreeNodePtr bn = *it;
+        items.push_back(bn);
+        double dist = bn->distance(q);
+
+        if (dist < min_dist) {
+          min_dist = dist;
+          best_node = static_cast<int>(items.size()) - 1;
+        }
+      }
+
+      assert(best_node != -1);
+
+      // Searching in the best node
+      return searchFromNode(q, items[best_node]);
+    }
+  }
+
+  void BinaryTree::addDescriptor(BinaryDescriptorPtr q) {
+    BinaryTreeNodePtr n = searchFromRoot(q);
+    assert(n->isLeaf());
+    if (n->childDescriptorSize() + 1 < s_) {
+      // There is enough space at this node for this descriptor, so we add it
+      n->addChildDescriptor(q);
+      // Storing the reference of the node where the descriptor hangs
+      desc_to_node[q] = n;
+    } else {
+      // This node should be split
+      n->setLeaf(false);
+
+      // Gathering the current descriptors
+      std::unordered_set<BinaryDescriptorPtr>* descs =
+                                                    n->getChildrenDescriptors();
+      BinaryDescriptorSet set;
+      for (auto it = (*descs).begin(); it != (*descs).end(); it++) {
+        BinaryDescriptorPtr d = *it;
+        set.insert(d);
+      }
+      set.insert(q);  // Adding the new descritor to the set
+
+      // Rebuilding this node
+      buildNode(set, n);
     }
   }
 
@@ -203,9 +271,9 @@ namespace obindex2 {
                              n->childDescriptorSize() << std::endl;
     } else {
       std::cout << "Children nodes: " << n->childNodeSize() << std::endl;
-      std::vector<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
-      for (unsigned i = 0; i < nodes->size(); i++) {
-        printNode((*nodes)[i]);
+      std::unordered_set<BinaryTreeNodePtr>* nodes = n->getChildrenNodes();
+      for (auto it = (*nodes).begin(); it != (*nodes).end(); it++) {
+        printNode(*it);
       }
     }
   }

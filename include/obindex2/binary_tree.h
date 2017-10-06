@@ -51,6 +51,10 @@ class BinaryTree {
                         BinaryTreeNodePtr n,
                         PriorityQueueNodePtr pq,
                         PriorityQueueDescriptorPtr r);
+  BinaryTreeNodePtr searchFromRoot(BinaryDescriptorPtr q);
+  BinaryTreeNodePtr searchFromNode(BinaryDescriptorPtr q,
+                                   BinaryTreeNodePtr n);
+  void addDescriptor(BinaryDescriptorPtr q);
   void printTree();
 
  private:

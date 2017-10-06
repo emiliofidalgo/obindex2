@@ -69,10 +69,14 @@ class BinaryTreeNode {
   }
 
   inline void addChildNode(BinaryTreeNodePtr child) {
-    ch_nodes_.push_back(child);
+    ch_nodes_.insert(child);
   }
 
-  inline std::vector<BinaryTreeNodePtr>* getChildrenNodes() {
+  inline void deleteChildNode(BinaryTreeNodePtr child) {
+    ch_nodes_.erase(child);
+  }
+
+  inline std::unordered_set<BinaryTreeNodePtr>* getChildrenNodes() {
     return &ch_nodes_;
   }
 
@@ -81,10 +85,14 @@ class BinaryTreeNode {
   }
 
   inline void addChildDescriptor(BinaryDescriptorPtr child) {
-    ch_descs_.push_back(child);
+    ch_descs_.insert(child);
   }
 
-  inline std::vector<BinaryDescriptorPtr>* getChildrenDescriptors() {
+  inline void deleteChildDescriptor(BinaryDescriptorPtr child) {
+    ch_descs_.erase(child);
+  }
+
+  inline std::unordered_set<BinaryDescriptorPtr>* getChildrenDescriptors() {
     return &ch_descs_;
   }
 
@@ -96,8 +104,8 @@ class BinaryTreeNode {
   bool is_leaf_;
   BinaryDescriptorPtr desc_;
   BinaryTreeNodePtr root_;
-  std::vector<BinaryTreeNodePtr> ch_nodes_;
-  std::vector<BinaryDescriptorPtr> ch_descs_;
+  std::unordered_set<BinaryTreeNodePtr> ch_nodes_;
+  std::unordered_set<BinaryDescriptorPtr> ch_descs_;
 };
 
 typedef std::unordered_set<BinaryTreeNodePtr> NodeSet;
