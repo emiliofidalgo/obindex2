@@ -20,7 +20,7 @@
 
 #include <opencv2/xfeatures2d.hpp>
 
-#include "obindex2/binary_tree.h"
+#include "obindex2/binary_index.h"
 
 int main() {
   // Creating feature detector and descriptor
@@ -39,49 +39,32 @@ int main() {
   cv::Mat descs;
   des->compute(img, kps, descs);
 
-  // Creating a set of descriptors
-  obindex2::BinaryDescriptorSet set;
-  for (int i = 0; i < descs.rows; i++) {
-    cv::Mat desc = descs.row(i);
-    obindex2::BinaryDescriptorPtr d =
-      std::make_shared<obindex2::BinaryDescriptor>(desc);
-    set.insert(d);
-  }
+  // Creating a new index of images
+  obindex2::ImageIndex index(16, 150, 4);
+  index.addImage(0, kps, descs);
 
-  obindex2::BinaryTree tree1(std::make_shared<
-                             obindex2::BinaryDescriptorSet>(set));
+  // Searching the same descriptor on the index
+  std::vector<std::vector<cv::DMatch> > matches;
+  index.searchDescriptors(descs, &matches, 2, 64);
 
-  tree1.deleteTree();
-  tree1.buildTree();
-
-  // Deleting descriptors
-  for (auto it = set.begin(); it != set.end(); it++) {
-    obindex2::BinaryDescriptorPtr d = *it;
-    tree1.deleteDescriptor(d);
-  }
-
-  tree1.printTree();
-
-  tree1.buildTree();
-
-  // Searching in the tree
-  for (auto it = set.begin(); it != set.end(); it++) {
-    obindex2::BinaryDescriptorPtr q = *it;
-    obindex2::PriorityQueueNodePtr pq = std::make_shared<
-                                          obindex2::PriorityQueueNode>();
-    obindex2::PriorityQueueDescriptorPtr r = std::make_shared<
-                                          obindex2::PriorityQueueDescriptor>();
-
-    tree1.traverseFromRoot(q, pq, r);
-
+  // Plotting the results
+  unsigned bad_assoc = 0;
+  for (unsigned i = 0; i < matches.size(); i++) {
     std::cout << "---" << std::endl;
+    std::cout << "Descriptor " << i << std::endl;
+    for (unsigned j = 0; j < matches[i].size(); j++) {
+      std::cout << "Query: " << matches[i][j].queryIdx << ", ";
+      std::cout << "Train: " << matches[i][j].trainIdx << ", ";
+      std::cout << "Image: " << matches[i][j].imgIdx << ", ";
+      std::cout << "Dist: " << matches[i][j].distance << std::endl;
+    }
 
-    while (!r->empty()) {
-     std::cout << r->top().dist << " " <<
-          r->top().desc << " vs " << q << std::endl;
-     r->pop();
+    if (static_cast<int>(i) != matches[i][0].trainIdx) {
+      bad_assoc++;
     }
   }
+
+  std::cout << "Incorrect associations: " << bad_assoc << std::endl;
 
   return 0;  // Correct test
 }

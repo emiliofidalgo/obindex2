@@ -86,7 +86,7 @@ TEST_CASE("BD: create descriptors from cv::Mat", "[bdesc]") {
           cv::xfeatures2d::BriefDescriptorExtractor::create();
 
   // Loading the test image
-  cv::Mat img = cv::imread("image.jpg");
+  cv::Mat img = cv::imread("image00.jpg");
 
   // Computing keypoints and descriptors
   std::vector<cv::KeyPoint> kps;

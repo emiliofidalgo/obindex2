@@ -29,7 +29,7 @@ endif()
 
 # Packages required to work with the library
 find_package(OpenCV REQUIRED) # OpenCV
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(OpenMP REQUIRED) # OpenMP
 if (OPENMP_FOUND)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -44,8 +44,9 @@ include_directories(include
 link_directories(${OpenCV_LIBRARIES}
                  ${Boost_LIBRARIES})
 
-# Copy test image to the binary directory
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/tests/image.jpg
+# Copy test images to the binary directory
+file(GLOB IMAGES "tests/*.jpg")
+file(COPY ${IMAGES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 ### Targets ###
@@ -53,7 +54,8 @@ add_library(obindex2
             src/binary_descriptor.cc
             src/binary_tree_node.cc
             include/obindex2/priority_queues.h
-            src/binary_tree.cc)
+            src/binary_tree.cc
+            src/binary_index.cc)
 target_link_libraries(obindex2
                       ${OpenCV_LIBRARIES}
                       ${Boost_LIBRARIES})
@@ -68,7 +70,17 @@ if (${EnableTesting} STREQUAL "ON")
   add_executable(test_btree tests/test_btree.cc)
   target_link_libraries(test_btree obindex2)
 
+  # Test for ImageIndex class
+  add_executable(test_bindex tests/test_bindex.cc)
+  target_link_libraries(test_bindex obindex2)
+
+  # Test for searching images
+  add_executable(test_search tests/test_search.cc)
+  target_link_libraries(test_search obindex2)
+
   enable_testing(true)  # Enables unit-testing.
   add_test(NAME test_bdesc COMMAND test_bdesc)
   add_test(NAME test_btree COMMAND test_btree)
+  add_test(NAME test_bindex COMMAND test_bindex)
+  add_test(NAME test_search COMMAND test_search)
 endif()
