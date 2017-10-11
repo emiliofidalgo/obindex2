@@ -69,7 +69,6 @@ class BinaryDescriptor {
   }
 
   inline BinaryDescriptor& operator=(const BinaryDescriptor& other) {
-    assert(size() == other.size());
     bitset_.clear();
     bitset_ = other.bitset_;
     return *this;

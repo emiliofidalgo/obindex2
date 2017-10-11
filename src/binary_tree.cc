@@ -261,7 +261,7 @@ namespace obindex2 {
   void BinaryTree::deleteDescriptor(BinaryDescriptorPtr q) {
     // We get the node where the descriptor is stored
     BinaryTreeNodePtr node = desc_to_node_[q];
-    assert(n->isLeaf());
+    assert(node->isLeaf());
 
     // We remove q from the node
     node->deleteChildDescriptor(q);

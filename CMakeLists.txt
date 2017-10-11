@@ -8,15 +8,17 @@ option(EnableTesting "EnableTesting" ON)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
-message("-- Build type: " ${CMAKE_BUILD_TYPE})
+message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 
 # Setting the flags for profiling information or not
 if(CMAKE_BUILD_TYPE MATCHES Release)
- set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -march=native")
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
-else()
- set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O0 -pg -march=native")
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0 -pg -march=native")
+  message(STATUS "Setting Release options")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -march=native")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
+elseif(CMAKE_BUILD_TYPE MATCHES Debug)
+  message(STATUS "Setting Debug options")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O0 -pg -march=native")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0 -pg -march=native")
 endif()
 
 # Check C++11 or C++0x support
@@ -30,7 +32,8 @@ elseif(COMPILER_SUPPORTS_CXX0X)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
    message(STATUS "Using flag -std=c++0x.")
 else()
-   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support.
+                         Please use a different C++ compiler.")
 endif()
 
 # Packages required to work with the library

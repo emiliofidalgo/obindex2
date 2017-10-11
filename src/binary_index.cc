@@ -41,7 +41,6 @@ ImageIndex::ImageIndex(const unsigned k,
 void ImageIndex::addImage(const unsigned image_id,
                           const std::vector<cv::KeyPoint>& kps,
                           const cv::Mat& descs) {
-  assert(descs.type == CV_8U);
   // Creating the set of BinaryDescriptors
   for (int i = 0; i < descs.rows; i++) {
     // Creating the corresponding descriptor
@@ -60,7 +59,7 @@ void ImageIndex::addImage(const unsigned image_id,
 
   // If the trees are not initialized, we build them
   if (!init_) {
-    assert(k_ < descs.rows);
+    assert(static_cast<int>(k_) < descs.rows);
     initTrees();
     init_ = true;
   }
