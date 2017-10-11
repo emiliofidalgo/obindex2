@@ -17,8 +17,8 @@ if(CMAKE_BUILD_TYPE MATCHES Release)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
 elseif(CMAKE_BUILD_TYPE MATCHES Debug)
   message(STATUS "Setting Debug options")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O0 -pg -march=native")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0 -pg -march=native")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O1 -pg -march=native")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O1 -pg -march=native")
 endif()
 
 # Check C++11 or C++0x support
