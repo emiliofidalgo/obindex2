@@ -5,13 +5,19 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 option(EnableTesting "EnableTesting" ON)
 
 # Setting build type to Release
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Release)
-ENDIF()
-MESSAGE("-- Build type: " ${CMAKE_BUILD_TYPE})
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+message("-- Build type: " ${CMAKE_BUILD_TYPE})
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -march=native")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
+# Setting the flags for profiling information or not
+if(CMAKE_BUILD_TYPE MATCHES Release)
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -march=native")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native")
+else()
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O0 -pg -march=native")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0 -pg -march=native")
+endif()
 
 # Check C++11 or C++0x support
 include(CheckCXXCompilerFlag)
@@ -35,6 +41,9 @@ if (OPENMP_FOUND)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
+
+# Printing the compiling flags
+message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
 
 include_directories(include
                     external
