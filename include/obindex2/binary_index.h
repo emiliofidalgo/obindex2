@@ -30,7 +30,9 @@
 namespace obindex2 {
 
 enum MergePolicy {
-  MERGE_POLICY_NONE
+  MERGE_POLICY_NONE,
+  MERGE_POLICY_AND,
+  MERGE_POLICY_OR
 };
 
 struct InvIndexItem {

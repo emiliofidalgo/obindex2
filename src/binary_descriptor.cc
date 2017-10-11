@@ -27,6 +27,10 @@ BinaryDescriptor::BinaryDescriptor(const int nbits) {
   bitset_.reset();
 }
 
+BinaryDescriptor::BinaryDescriptor(const Bitset& bset) {
+  bitset_ = bset;
+}
+
 BinaryDescriptor::BinaryDescriptor(const cv::Mat& desc) {
   assert(desc.type() == CV_8U);
 

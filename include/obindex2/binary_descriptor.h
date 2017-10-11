@@ -37,6 +37,7 @@ class BinaryDescriptor {
  public:
   // Constructors
   explicit BinaryDescriptor(const int nbits = 256);
+  explicit BinaryDescriptor(const Bitset& bset);
   explicit BinaryDescriptor(const cv::Mat& desc);
 
   // Methods
@@ -54,17 +55,17 @@ class BinaryDescriptor {
 
   inline static double distHamming(const BinaryDescriptor& a,
                                    const BinaryDescriptor& b) {
-    return static_cast<double>((a.bitset_^b.bitset_).count());
+    return static_cast<double>((a.bitset_ ^ b.bitset_).count());
   }
 
   // Operator overloading
   inline bool operator==(const BinaryDescriptor& d) {
-    int distance = (bitset_^d.bitset_).count();
+    int distance = (bitset_ ^ d.bitset_).count();
     return distance == 0;
   }
 
   inline bool operator!=(const BinaryDescriptor& d) {
-    int distance = (bitset_^d.bitset_).count();
+    int distance = (bitset_ ^ d.bitset_).count();
     return distance != 0;
   }
 
@@ -72,6 +73,14 @@ class BinaryDescriptor {
     bitset_.clear();
     bitset_ = other.bitset_;
     return *this;
+  }
+
+  inline BinaryDescriptor operator&(const BinaryDescriptor& other) {
+    return BinaryDescriptor(bitset_ & other.bitset_);
+  }
+
+  inline BinaryDescriptor operator|(const BinaryDescriptor& other) {
+    return BinaryDescriptor(bitset_ | other.bitset_);
   }
 
   cv::Mat toCvMat();

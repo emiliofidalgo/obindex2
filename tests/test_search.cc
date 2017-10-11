@@ -61,7 +61,7 @@ int main() {
   unsigned nimages = filenames.size();
 
   // Creating a new index of images
-  obindex2::ImageIndex index(16, 150, 4);
+  obindex2::ImageIndex index(16, 150, 4, obindex2::MERGE_POLICY_AND);
 
   // Adding image 0
   // Detecting and describing keypoints
