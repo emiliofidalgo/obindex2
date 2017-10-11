@@ -127,5 +127,14 @@ int main() {
                                           index.numDescriptors() << std::endl;
   }
 
+  // Deleting the total set of descriptors
+  unsigned ndescs = index.numDescriptors();
+  for (unsigned i = 0; i < ndescs; i++) {
+    index.deleteDescriptor(i);
+  }
+
+  std::cout << "---" << std::endl;
+  std::cout << "Total index size AFTER DELETE: " <<
+                                          index.numDescriptors() << std::endl;
   return 0;  // Correct test
 }
