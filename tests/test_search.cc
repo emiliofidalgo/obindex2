@@ -48,7 +48,7 @@ void getFilenames(const std::string& directory,
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
   // Creating feature detector and descriptor
   cv::Ptr<cv::FastFeatureDetector> det =
           cv::FastFeatureDetector::create();
@@ -57,7 +57,7 @@ int main() {
 
   // Loading image filenames
   std::vector<std::string> filenames;
-  getFilenames(".", &filenames);
+  getFilenames(argv[1], &filenames);
   unsigned nimages = filenames.size();
 
   // Creating a new index of images
