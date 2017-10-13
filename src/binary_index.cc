@@ -25,14 +25,16 @@ namespace obindex2 {
 ImageIndex::ImageIndex(const unsigned k,
                        const unsigned s,
                        const unsigned t,
-                       const MergePolicy merge_policy) :
+                       const MergePolicy merge_policy,
+                       const bool purge_descriptors) :
     k_(k),
     s_(s),
     t_(t),
     init_(false),
     nimages_(0),
     ndesc_(0),
-    merge_policy_(merge_policy) {
+    merge_policy_(merge_policy),
+    purge_descriptors_(purge_descriptors) {
       // Validating the corresponding parameters
       assert(k_ > 1);
       assert(k_ < s_);
@@ -62,6 +64,11 @@ void ImageIndex::addImage(const unsigned image_id,
     assert(static_cast<int>(k_) < descs.rows);
     initTrees();
     init_ = true;
+  }
+
+  // Deleting unstable features
+  if (purge_descriptors_) {
+    purgeDescriptors();
   }
 
   nimages_++;
@@ -129,6 +136,11 @@ void ImageIndex::addImage(const unsigned image_id,
     item.dist = matches[match_ind].distance;
     item.kp_ind = qindex;
     inv_index_[t_d].push_back(item);
+  }
+
+  // Deleting unstable features
+  if (purge_descriptors_) {
+    purgeDescriptors();
   }
 
   nimages_++;
@@ -324,6 +336,7 @@ void ImageIndex::insertDescriptor(BinaryDescriptorPtr q) {
   desc_to_id_[q] = ndesc_;
   id_to_desc_[ndesc_] = q;
   ndesc_++;
+  recently_added_.push_back(q);
 
   // Indexing the descriptor inside each tree
   if (init_) {
@@ -347,6 +360,28 @@ void ImageIndex::deleteDescriptor(BinaryDescriptorPtr q) {
   unsigned desc_id = desc_to_id_[q];
   desc_to_id_.erase(q);
   id_to_desc_.erase(desc_id);
+  inv_index_.erase(q);
+}
+
+void ImageIndex::purgeDescriptors() {
+  auto it = recently_added_.begin();
+  unsigned curr_img = nimages_;
+
+  while (it != recently_added_.end()) {
+    BinaryDescriptorPtr desc = *it;
+    // We assess if at least three images have passed since creation
+    if ((curr_img - inv_index_[desc][0].image_id) > 1) {
+      // If so, we assess if the feature has been seen at least twice
+      if (inv_index_[desc].size() < 4) {
+        deleteDescriptor(desc);
+      }
+
+      it = recently_added_.erase(it);
+    } else {
+      // This descriptor should be maintained in the list
+      it++;
+    }
+  }
 }
 
 }  // namespace obindex2

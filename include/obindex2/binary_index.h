@@ -21,6 +21,7 @@
 #ifndef INCLUDE_OBINDEX2_BINARY_INDEX_H_
 #define INCLUDE_OBINDEX2_BINARY_INDEX_H_
 
+#include <list>
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -79,7 +80,8 @@ class ImageIndex {
   explicit ImageIndex(const unsigned k = 16,
                       const unsigned s = 150,
                       const unsigned t = 4,
-                      const MergePolicy merge_policy = MERGE_POLICY_NONE);
+                      const MergePolicy merge_policy = MERGE_POLICY_NONE,
+                      const bool purge_descriptors = true);
 
   // Methods
   void addImage(const unsigned image_id,
@@ -123,11 +125,13 @@ class ImageIndex {
   unsigned nimages_;
   unsigned ndesc_;
   MergePolicy merge_policy_;
+  bool purge_descriptors_;
   std::vector<BinaryTreePtr> trees_;
   std::unordered_map<BinaryDescriptorPtr,
                      std::vector<InvIndexItem> > inv_index_;
   std::unordered_map<BinaryDescriptorPtr, unsigned> desc_to_id_;
   std::unordered_map<unsigned, BinaryDescriptorPtr> id_to_desc_;
+  std::list<BinaryDescriptorPtr> recently_added_;
   std::mutex mutex_search_pq_;
   std::mutex mutex_search_r_;
 
@@ -139,6 +143,7 @@ class ImageIndex {
                         unsigned checks = 32);
   void insertDescriptor(BinaryDescriptorPtr q);
   void deleteDescriptor(BinaryDescriptorPtr q);
+  void purgeDescriptors();
 };
 
 }  // namespace obindex2
