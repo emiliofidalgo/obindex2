@@ -21,6 +21,7 @@
 #ifndef INCLUDE_OBINDEX2_BINARY_DESCRIPTOR_H_
 #define INCLUDE_OBINDEX2_BINARY_DESCRIPTOR_H_
 
+#include <bitset>
 #include <memory>
 #include <string>
 #include <sstream>
@@ -28,66 +29,100 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/hal/hal.hpp>
 
 namespace obindex2 {
-
-typedef boost::dynamic_bitset<> Bitset;
 
 class BinaryDescriptor {
  public:
   // Constructors
-  explicit BinaryDescriptor(const int nbits = 256);
-  explicit BinaryDescriptor(const Bitset& bset);
+  explicit BinaryDescriptor(const unsigned nbits = 256);
+  explicit BinaryDescriptor(const unsigned char* bits, unsigned nbytes);
   explicit BinaryDescriptor(const cv::Mat& desc);
+  explicit BinaryDescriptor(const BinaryDescriptor& bd);
+  // Destructor
+  virtual ~BinaryDescriptor();
 
   // Methods
   inline void set(int nbit) {
-    bitset_.set(nbit);
+    // Detecting the correct byte
+    int nbyte = nbit / 8;
+    int nb = 7 - (nbit % 8);
+
+    // Setting the bit
+    bits_[nbyte] |= 1 << nb;
   }
 
   inline void reset(int nbit) {
-    bitset_.reset(nbit);
+    // Detecting the correct byte
+    int nbyte = nbit / 8;
+    int nb = 7 - (nbit % 8);
+
+    // Setting the bit
+    bits_[nbyte] &= ~(1 << nb);
   }
 
   inline int size() {
-    return bitset_.size();
+    return static_cast<int>(size_in_bits_);
   }
 
   inline static double distHamming(const BinaryDescriptor& a,
                                    const BinaryDescriptor& b) {
-    return static_cast<double>((a.bitset_ ^ b.bitset_).count());
+    int hamming = cv::hal::normHamming(a.bits_, b.bits_, a.size_in_bytes_);
+    return static_cast<double>(hamming);
   }
 
   // Operator overloading
   inline bool operator==(const BinaryDescriptor& d) {
-    int distance = (bitset_ ^ d.bitset_).count();
-    return distance == 0;
+    int hamming = cv::hal::normHamming(bits_, d.bits_, size_in_bytes_);
+    return hamming == 0;
   }
 
   inline bool operator!=(const BinaryDescriptor& d) {
-    int distance = (bitset_ ^ d.bitset_).count();
-    return distance != 0;
+    int hamming = cv::hal::normHamming(bits_, d.bits_, size_in_bytes_);
+    return hamming != 0;
   }
 
   inline BinaryDescriptor& operator=(const BinaryDescriptor& other) {
-    bitset_.clear();
-    bitset_ = other.bitset_;
+    // Clearing previous memory
+    if (bits_ != nullptr) {
+      delete [] bits_;
+    }
+
+    // Allocating new memory
+    size_in_bits_ = other.size_in_bits_;
+    size_in_bytes_ = other.size_in_bytes_;
+    bits_ = new unsigned char[size_in_bytes_];
+    memcpy(bits_, other.bits_, sizeof(unsigned char) * size_in_bytes_);
+
     return *this;
   }
 
-  inline BinaryDescriptor operator&(const BinaryDescriptor& other) {
-    return BinaryDescriptor(bitset_ & other.bitset_);
+  inline BinaryDescriptor& operator&=(const BinaryDescriptor& other) {
+    unsigned size = other.size_in_bytes_;
+    for (unsigned i = 0; i < size; i++) {
+      bits_[i] = bits_[i] & other.bits_[i];
+    }
+
+    return *this;
   }
 
-  inline BinaryDescriptor operator|(const BinaryDescriptor& other) {
-    return BinaryDescriptor(bitset_ | other.bitset_);
+  inline BinaryDescriptor& operator|=(const BinaryDescriptor& other) {
+    unsigned size = other.size_in_bytes_;
+    for (unsigned i = 0; i < size; i++) {
+      bits_[i] = bits_[i] | other.bits_[i];
+    }
+
+    return *this;
   }
 
   cv::Mat toCvMat();
   std::string toString();
 
-  // For simplicity, we made it public, but you should use the methods.
-  Bitset bitset_;
+  // For simplicity, we made it public, but you should use the public methods
+  unsigned char* bits_;
+  unsigned size_in_bytes_;
+  unsigned size_in_bits_;
 };
 
 typedef std::shared_ptr<BinaryDescriptor> BinaryDescriptorPtr;

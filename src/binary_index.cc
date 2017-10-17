@@ -124,9 +124,9 @@ void ImageIndex::addImage(const unsigned image_id,
 
     // Merge and replace according to the merging policy
     if (merge_policy_ == MERGE_POLICY_AND) {
-      *t_d = *t_d & * q_d;
+      *t_d &= *q_d;
     } else if (merge_policy_ == MERGE_POLICY_OR) {
-      *t_d = *t_d | * q_d;
+      *t_d |= *q_d;
     }
 
     // Creating the inverted index item

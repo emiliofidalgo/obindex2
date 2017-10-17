@@ -75,7 +75,7 @@ TEST_CASE("BD: assigning descriptors", "[bdesc]") {
   d1 = d2;
 
   REQUIRE(d1 == d2);
-  REQUIRE(&(d1.bitset_) != &(d2.bitset_));
+  REQUIRE(&(d1.bits_) != &(d2.bits_));
 }
 
 TEST_CASE("BD: create descriptors from cv::Mat", "[bdesc]") {
