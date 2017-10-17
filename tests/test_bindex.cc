@@ -41,6 +41,7 @@ int main() {
 
   // Creating a new index of images
   obindex2::ImageIndex index(16, 150, 4);
+
   index.addImage(0, kps, descs);
 
   // Searching the same descriptor on the index

@@ -132,8 +132,6 @@ class ImageIndex {
   std::unordered_map<BinaryDescriptorPtr, unsigned> desc_to_id_;
   std::unordered_map<unsigned, BinaryDescriptorPtr> id_to_desc_;
   std::list<BinaryDescriptorPtr> recently_added_;
-  std::mutex mutex_search_pq_;
-  std::mutex mutex_search_r_;
 
   void initTrees();
   void searchDescriptor(BinaryDescriptorPtr q,

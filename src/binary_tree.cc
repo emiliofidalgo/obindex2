@@ -133,15 +133,15 @@ namespace obindex2 {
   }
 
   void BinaryTree::traverseFromRoot(BinaryDescriptorPtr q,
-                                    PriorityQueueNodePtr pq,
-                                    PriorityQueueDescriptorPtr r) {
+                                    NodeQueuePtr pq,
+                                    DescriptorQueuePtr r) {
     traverseFromNode(q, root_, pq, r);
   }
 
   void BinaryTree::traverseFromNode(BinaryDescriptorPtr q,
                                     BinaryTreeNodePtr n,
-                                    PriorityQueueNodePtr pq,
-                                    PriorityQueueDescriptorPtr r) {
+                                    NodeQueuePtr pq,
+                                    DescriptorQueuePtr r) {
     // If its a leaf node, the search ends
     if (n->isLeaf()) {
       // Adding points to R
@@ -150,7 +150,7 @@ namespace obindex2 {
       for (auto it = (*descs).begin(); it != (*descs).end(); it++) {
         BinaryDescriptorPtr d = *it;
         double dist = obindex2::BinaryDescriptor::distHamming(*q, *d);
-        PQItemDescriptor item(dist, d);
+        DescriptorQueueItem item(dist, d);
         r->push(item);
       }
     } else {
@@ -160,13 +160,13 @@ namespace obindex2 {
       double min_dist = DBL_MAX;
 
       // Computing distances to nodes
-      std::vector<PQItemNode> items;
+      std::vector<NodeQueueItem> items;
       unsigned node_id = 0;
       // Computing distances to nodes
       for (auto it = (*nodes).begin(); it != (*nodes).end(); it++) {
         BinaryTreeNodePtr bn = *it;
         double dist = bn->distance(q);
-        PQItemNode item(dist, tree_id_, bn);
+        NodeQueueItem item(dist, tree_id_, bn);
         items.push_back(item);
 
         if (dist < min_dist) {

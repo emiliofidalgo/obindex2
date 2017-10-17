@@ -67,19 +67,19 @@ int main() {
   // Searching in the tree
   for (auto it = set.begin(); it != set.end(); it++) {
     obindex2::BinaryDescriptorPtr q = *it;
-    obindex2::PriorityQueueNodePtr pq = std::make_shared<
-                                          obindex2::PriorityQueueNode>();
-    obindex2::PriorityQueueDescriptorPtr r = std::make_shared<
-                                          obindex2::PriorityQueueDescriptor>();
+    obindex2::NodeQueuePtr pq = std::make_shared<
+                                          obindex2::NodeQueue>();
+    obindex2::DescriptorQueuePtr r = std::make_shared<
+                                          obindex2::DescriptorQueue>();
 
     tree1.traverseFromRoot(q, pq, r);
+    r->sort();
 
     std::cout << "---" << std::endl;
 
-    while (!r->empty()) {
-     std::cout << r->top().dist << " " <<
-          r->top().desc << " vs " << q << std::endl;
-     r->pop();
+    for (unsigned i = 0; i < r->size(); i++) {
+      obindex2::DescriptorQueueItem n = r->get(i);
+      std::cout << n.dist << " " << n.desc << " vs " << q << std::endl;
     }
   }
 

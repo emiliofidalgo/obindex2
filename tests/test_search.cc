@@ -18,6 +18,7 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <chrono>
 #include <cstdio>
 #include <iostream>
 
@@ -75,6 +76,8 @@ int main(int argc, char** argv) {
   // Adding the image to the index.
   index.addImage(0, kps0, dscs0);
 
+  auto start = std::chrono::steady_clock::now();
+
   for (unsigned i = 1; i < nimages; i++) {
     std::cout << "---" << std::endl;
     // Processing image i
@@ -127,8 +130,11 @@ int main(int argc, char** argv) {
                                           index.numDescriptors() << std::endl;
   }
 
-  std::cout << "---" << std::endl;
-  std::cout << "Total index size AFTER DELETE: " <<
-                                          index.numDescriptors() << std::endl;
+  auto end = std::chrono::steady_clock::now();
+  auto diff = end - start;
+
+  std::cout << std::chrono::duration<double, std::milli>(diff).count()
+      << " ms" << std::endl;
+
   return 0;  // Correct test
 }

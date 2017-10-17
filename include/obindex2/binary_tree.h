@@ -45,12 +45,12 @@ class BinaryTree {
   void buildTree();
   void deleteTree();
   void traverseFromRoot(BinaryDescriptorPtr q,
-                        PriorityQueueNodePtr pq,
-                        PriorityQueueDescriptorPtr r);
+                        NodeQueuePtr pq,
+                        DescriptorQueuePtr r);
   void traverseFromNode(BinaryDescriptorPtr q,
                         BinaryTreeNodePtr n,
-                        PriorityQueueNodePtr pq,
-                        PriorityQueueDescriptorPtr r);
+                        NodeQueuePtr pq,
+                        DescriptorQueuePtr r);
   BinaryTreeNodePtr searchFromRoot(BinaryDescriptorPtr q);
   BinaryTreeNodePtr searchFromNode(BinaryDescriptorPtr q,
                                    BinaryTreeNodePtr n);

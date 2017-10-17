@@ -248,17 +248,17 @@ void ImageIndex::searchDescriptor(BinaryDescriptorPtr q,
                                   unsigned knn,
                                   unsigned checks) {
   unsigned points_searched = 0;
-  PriorityQueueNode pq;
-  PriorityQueueDescriptor r;
+  NodePriorityQueue pq;
+  DescriptorQueue r;
 
   // Initializing search structures
-  std::vector<PriorityQueueNodePtr> pqs;
-  std::vector<PriorityQueueDescriptorPtr> rs;
+  std::vector<NodeQueuePtr> pqs;
+  std::vector<DescriptorQueuePtr> rs;
   for (unsigned i = 0; i < trees_.size(); i++) {
-    PriorityQueueNodePtr tpq = std::make_shared<PriorityQueueNode>();
+    NodeQueuePtr tpq = std::make_shared<NodeQueue>();
     pqs.push_back(tpq);
 
-    PriorityQueueDescriptorPtr tr = std::make_shared<PriorityQueueDescriptor>();
+    DescriptorQueuePtr tr = std::make_shared<DescriptorQueue>();
     rs.push_back(tr);
   }
 
@@ -270,64 +270,71 @@ void ImageIndex::searchDescriptor(BinaryDescriptorPtr q,
 
   //  Gathering results from each individual search
   std::unordered_set<BinaryDescriptorPtr> already_added;
-  #pragma omp parallel for
   for (unsigned i = 0; i < trees_.size(); i++) {
-    // Obtaining priority queue nodes
-    while (!pqs[i]->empty()) {
-      std::lock_guard<std::mutex> lock(mutex_search_pq_);
-      pq.push(pqs[i]->top());
-      pqs[i]->pop();
-    }
-
     // Obtaining descriptor nodes
-    while (!rs[i]->empty()) {
-      PQItemDescriptor r_item = rs[i]->top();
-      rs[i]->pop();
-      std::lock_guard<std::mutex> lock(mutex_search_r_);
-      if (already_added.find(r_item.desc) == already_added.end()) {
+    unsigned r_size = rs[i]->size();
+    for (unsigned j = 0; j < r_size; j++) {
+      DescriptorQueueItem r_item = rs[i]->get(j);
+      std::pair<std::unordered_set<BinaryDescriptorPtr>::iterator,
+                bool > result;
+      result = already_added.insert(r_item.desc);
+      if (result.second) {
         r.push(r_item);
-        already_added.insert(r_item.desc);
         points_searched++;
       }
     }
   }
 
   // Continuing the search if not enough descriptors have been checked
-  PriorityQueueNodePtr pq_ptr = std::make_shared<PriorityQueueNode>(pq);
-  while (points_searched < checks && !pq.empty()) {
-    // Get the closest node to continue the search
-    PQItemNode n = pq.top();
-    pq.pop();
+  if (points_searched < checks) {
+    // Gathering the next nodes to search
+    for (unsigned i = 0; i < trees_.size(); i++) {
+      // Obtaining priority queue nodes
+      unsigned pq_size = pqs[i]->size();
+      for (unsigned j = 0; j < pq_size; j++) {
+        pq.push(pqs[i]->get(j));
+      }
+    }
 
-    // Searching in the node
-    PriorityQueueDescriptorPtr tr = std::make_shared<PriorityQueueDescriptor>();
-    trees_[n.tree_id]->traverseFromNode(q, n.node, pq_ptr, tr);
+    NodePriorityQueuePtr pq_ptr = std::make_shared<NodePriorityQueue>(pq);
+    while (points_searched < checks && !pq.empty()) {
+      // Get the closest node to continue the search
+      NodeQueueItem n = pq.top();
+      pq.pop();
 
-    // Obtaining descriptor nodes
-    while (!tr->empty()) {
-      PQItemDescriptor r_item = tr->top();
-      tr->pop();
-      if (already_added.find(r_item.desc) == already_added.end()) {
-        r.push(r_item);
-        already_added.insert(r_item.desc);
-        points_searched++;
+      // Searching in the node
+      NodeQueuePtr tpq = std::make_shared<NodeQueue>();
+      DescriptorQueuePtr tr = std::make_shared<DescriptorQueue>();
+      trees_[n.tree_id]->traverseFromNode(q, n.node, tpq, tr);
+
+      // Adding new nodes to search to PQ
+      for (unsigned i = 0; i < tpq->size(); i++) {
+        pq.push(tpq->get(i));
+      }
+
+      for (unsigned j = 0; j < tr->size(); j++) {
+        DescriptorQueueItem r_item = tr->get(j);
+        std::pair<std::unordered_set<BinaryDescriptorPtr>::iterator,
+                bool > result;
+        result = already_added.insert(r_item.desc);
+        if (result.second) {
+          r.push(r_item);
+          points_searched++;
+        }
       }
     }
   }
+  r.sort();
 
   // Returning the required number of descriptors descriptors
   neigh->clear();
   distances->clear();
-  for (unsigned i = 0; i < knn; i++) {
-    if (!r.empty()) {
-      PQItemDescriptor d = r.top();
-      r.pop();
+  unsigned ndescs = std::min(knn, r.size());
+  for (unsigned i = 0; i < ndescs; i++) {
+    DescriptorQueueItem d = r.get(i);
 
-      neigh->push_back(d.desc);
-      distances->push_back(d.dist);
-    } else {
-      break;
-    }
+    neigh->push_back(d.desc);
+    distances->push_back(d.dist);
   }
 }
 
