@@ -1,5 +1,5 @@
-project(obindex2 LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+project(obindex2 LANGUAGES CXX)
 
 # Compile tests or not
 option(EnableTesting "EnableTesting" ON)
