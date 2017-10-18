@@ -128,6 +128,12 @@ int main(int argc, char** argv) {
     index.addImage(i, kps, dscs, matches);
     std::cout << "Total index size AFTER UPDATE: " <<
                                           index.numDescriptors() << std::endl;
+
+    // Reindexing features every 500 images
+    if (i % 250 == 0) {
+      std::cout << "------ Rebuilding indices ------" << std::endl;
+      index.rebuild();
+    }
   }
 
   auto end = std::chrono::steady_clock::now();

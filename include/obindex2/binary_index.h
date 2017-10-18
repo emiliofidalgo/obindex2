@@ -109,10 +109,8 @@ class ImageIndex {
 
   inline void rebuild() {
     if (init_) {
-      #pragma omp parallel for
-      for (unsigned i = 0; i < trees_.size(); i++) {
-        trees_[i]->buildTree();
-      }
+      trees_.clear();
+      initTrees();
     }
   }
 
