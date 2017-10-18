@@ -44,9 +44,9 @@ class BinaryTree {
   // Methods
   void buildTree();
   void deleteTree();
-  void traverseFromRoot(BinaryDescriptorPtr q,
-                        NodeQueuePtr pq,
-                        DescriptorQueuePtr r);
+  unsigned traverseFromRoot(BinaryDescriptorPtr q,
+                            NodeQueuePtr pq,
+                            DescriptorQueuePtr r);
   void traverseFromNode(BinaryDescriptorPtr q,
                         BinaryTreeNodePtr n,
                         NodeQueuePtr pq,
@@ -57,6 +57,13 @@ class BinaryTree {
   void addDescriptor(BinaryDescriptorPtr q);
   void deleteDescriptor(BinaryDescriptorPtr q);
   void printTree();
+  inline unsigned numDegradedNodes() {
+    return degraded_nodes_;
+  }
+
+  inline unsigned numNodes() {
+    return nset_.size();
+  }
 
  private:
   BinaryDescriptorSetPtr dset_;
@@ -64,8 +71,13 @@ class BinaryTree {
   BinaryTreeNodePtr root_;
   unsigned k_;
   unsigned s_;
+  unsigned k_2_;
   NodeSet nset_;
   std::unordered_map<BinaryDescriptorPtr, BinaryTreeNodePtr> desc_to_node_;
+
+  // Tree statistics
+  unsigned degraded_nodes_;
+  unsigned nvisited_nodes_;
 
   void buildNode(BinaryDescriptorSet d, BinaryTreeNodePtr root);
   void printNode(BinaryTreeNodePtr n);

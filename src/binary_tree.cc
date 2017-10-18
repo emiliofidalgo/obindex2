@@ -30,7 +30,8 @@ namespace obindex2 {
     tree_id_(tree_id),
     root_(nullptr),
     k_(k),
-    s_(s) {
+    s_(s),
+    k_2_(k_ / 2) {
       srand(time(NULL));
       buildTree();
   }
@@ -42,6 +43,9 @@ namespace obindex2 {
   void BinaryTree::buildTree() {
     // Deleting the previous tree, if exists any
     deleteTree();
+
+    degraded_nodes_ = 0;
+    nvisited_nodes_ = 0;
 
     // Creating the root node
     root_ = std::make_shared<BinaryTreeNode>();
@@ -132,16 +136,19 @@ namespace obindex2 {
     }
   }
 
-  void BinaryTree::traverseFromRoot(BinaryDescriptorPtr q,
+  unsigned BinaryTree::traverseFromRoot(BinaryDescriptorPtr q,
                                     NodeQueuePtr pq,
                                     DescriptorQueuePtr r) {
+    nvisited_nodes_ = 0;
     traverseFromNode(q, root_, pq, r);
+    return nvisited_nodes_;
   }
 
   void BinaryTree::traverseFromNode(BinaryDescriptorPtr q,
                                     BinaryTreeNodePtr n,
                                     NodeQueuePtr pq,
                                     DescriptorQueuePtr r) {
+    nvisited_nodes_++;
     // If its a leaf node, the search ends
     if (n->isLeaf()) {
       // Adding points to R
@@ -286,8 +293,14 @@ namespace obindex2 {
 
   void BinaryTree::deleteNodeRecursive(BinaryTreeNodePtr n) {
     assert(!n->isLeaf());
+    // Validating if this node is degraded
+    if (n->childNodeSize() < k_2_ && !n->isBad()) {
+      degraded_nodes_++;
+      n->setBad(true);
+    }
+
     if (n->childNodeSize() == 0 && n != root_) {
-      // We remove
+      // We remove this node
       BinaryTreeNodePtr parent = n->getRoot();
       parent->deleteChildNode(n);
       nset_.erase(n);
@@ -316,5 +329,4 @@ namespace obindex2 {
       }
     }
   }
-
 }  // namespace obindex2

@@ -48,6 +48,14 @@ class BinaryTreeNode {
     is_leaf_ = leaf;
   }
 
+  inline bool isBad() {
+    return is_bad_;
+  }
+
+  inline void setBad(const bool bad) {
+    is_bad_ = bad;
+  }
+
   inline BinaryDescriptorPtr getDescriptor() {
     return desc_;
   }
@@ -106,6 +114,7 @@ class BinaryTreeNode {
 
  private:
   bool is_leaf_;
+  bool is_bad_;
   BinaryDescriptorPtr desc_;
   BinaryTreeNodePtr root_;
   std::unordered_set<BinaryTreeNodePtr> ch_nodes_;
