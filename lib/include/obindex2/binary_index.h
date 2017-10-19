@@ -139,7 +139,7 @@ class ImageIndex {
                         unsigned checks = 32);
   void insertDescriptor(BinaryDescriptorPtr q);
   void deleteDescriptor(BinaryDescriptorPtr q);
-  void purgeDescriptors();
+  void purgeDescriptors(const unsigned curr_img);
 };
 
 }  // namespace obindex2

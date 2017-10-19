@@ -68,7 +68,7 @@ void ImageIndex::addImage(const unsigned image_id,
 
   // Deleting unstable features
   if (purge_descriptors_) {
-    purgeDescriptors();
+    purgeDescriptors(image_id);
   }
 
   nimages_++;
@@ -140,7 +140,7 @@ void ImageIndex::addImage(const unsigned image_id,
 
   // Deleting unstable features
   if (purge_descriptors_) {
-    purgeDescriptors();
+    purgeDescriptors(image_id);
   }
 
   nimages_++;
@@ -370,9 +370,8 @@ void ImageIndex::deleteDescriptor(BinaryDescriptorPtr q) {
   inv_index_.erase(q);
 }
 
-void ImageIndex::purgeDescriptors() {
+void ImageIndex::purgeDescriptors(const unsigned curr_img) {
   auto it = recently_added_.begin();
-  unsigned curr_img = nimages_;
 
   while (it != recently_added_.end()) {
     BinaryDescriptorPtr desc = *it;
