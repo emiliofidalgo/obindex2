@@ -370,6 +370,29 @@ void ImageIndex::deleteDescriptor(BinaryDescriptorPtr q) {
   inv_index_.erase(q);
 }
 
+void ImageIndex::getMatchings(
+      const std::vector<cv::KeyPoint>& query_kps,
+      const std::vector<cv::DMatch>& matches,
+      std::unordered_map<unsigned, PointMatches>* point_matches) {
+  for (unsigned i = 0; i < matches.size(); i++) {
+    // Getting the query point
+    int qid = matches[i].queryIdx;
+    cv::Point2f qpoint = query_kps[qid].pt;
+
+    // Processing the train points
+    int tid = matches[i].trainIdx;
+    BinaryDescriptorPtr desc_ptr = id_to_desc_[static_cast<unsigned>(tid)];
+    for (unsigned j = 0; j < inv_index_[desc_ptr].size(); j++) {
+      InvIndexItem item = inv_index_[desc_ptr][j];
+      unsigned im_id = item.image_id;
+      cv::Point2f tpoint = item.pt;
+
+      (*point_matches)[im_id].query.push_back(qpoint);
+      (*point_matches)[im_id].train.push_back(tpoint);
+    }
+  }
+}
+
 void ImageIndex::purgeDescriptors(const unsigned curr_img) {
   auto it = recently_added_.begin();
 

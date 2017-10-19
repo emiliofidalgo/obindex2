@@ -74,6 +74,11 @@ struct ImageMatch {
   bool operator<(const ImageMatch &lcr) const { return score > lcr.score; }
 };
 
+struct PointMatches {
+  std::vector<cv::Point2f> query;
+  std::vector<cv::Point2f> train;
+};
+
 class ImageIndex {
  public:
   // Constructors
@@ -99,6 +104,9 @@ class ImageIndex {
                          const unsigned knn = 2,
                          const unsigned checks = 32);
   void deleteDescriptor(const unsigned desc_id);
+  void getMatchings(const std::vector<cv::KeyPoint>& query_kps,
+                    const std::vector<cv::DMatch>& matches,
+                    std::unordered_map<unsigned, PointMatches>* point_matches);
   inline unsigned numImages() {
     return nimages_;
   }

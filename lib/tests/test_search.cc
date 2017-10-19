@@ -134,6 +134,24 @@ int main(int argc, char** argv) {
       std::cout << "------ Rebuilding indices ------" << std::endl;
       index.rebuild();
     }
+
+    // Showing matchings with the previous image
+    std::unordered_map<unsigned, obindex2::PointMatches> point_matches;
+    index.getMatchings(kps, matches, &point_matches);
+    obindex2::PointMatches pmatches = point_matches[i - 1];
+
+    std::cout << "Matchings with the previous image: " << pmatches.query.size();
+
+    for (unsigned j = 0; j < pmatches.query.size(); j++) {
+      cv::Point2f q = pmatches.query[j];
+      cv::Point2f t = pmatches.train[j];
+      cv::line(img, q, t, cv::Scalar(0, 255, 0));
+      cv::circle(img, q, 3, cv::Scalar(0, 0, 255), -1);
+      cv::circle(img, t, 3, cv::Scalar(255, 0, 0), -1);
+    }
+
+    cv::imshow("Matchings", img);
+    cv::waitKey(5);
   }
 
   auto end = std::chrono::steady_clock::now();
