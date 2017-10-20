@@ -148,7 +148,8 @@ void ImageIndex::addImage(const unsigned image_id,
 
 void ImageIndex::searchImages(const cv::Mat& descs,
                               const std::vector<cv::DMatch>& gmatches,
-                              std::vector<ImageMatch>* img_matches) {
+                              std::vector<ImageMatch>* img_matches,
+                              bool sort) {
   // Initializing the resulting structure
   img_matches->resize(nimages_);
   for (unsigned i = 0; i < nimages_; i++) {
@@ -191,7 +192,9 @@ void ImageIndex::searchImages(const cv::Mat& descs,
     }
   }
 
-  std::sort(img_matches->begin(), img_matches->end());
+  if (sort) {
+    std::sort(img_matches->begin(), img_matches->end());
+  }
 }
 
 void ImageIndex::initTrees() {

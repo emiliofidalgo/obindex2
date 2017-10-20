@@ -98,7 +98,8 @@ class ImageIndex {
                 const std::vector<cv::DMatch>& matches);
   void searchImages(const cv::Mat& descs,
                     const std::vector<cv::DMatch>& gmatches,
-                    std::vector<ImageMatch>* img_matches);
+                    std::vector<ImageMatch>* img_matches,
+                    bool sort = true);
   void searchDescriptors(const cv::Mat& descs,
                          std::vector<std::vector<cv::DMatch> >* matches,
                          const unsigned knn = 2,
