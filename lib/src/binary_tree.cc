@@ -14,7 +14,7 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with bimos. If not, see <http://www.gnu.org/licenses/>.
+* along with obindex2. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "obindex2/binary_tree.h"
