@@ -2,7 +2,6 @@
 * This file is part of obindex2.
 *
 * Copyright (C) 2017 Emilio Garcia-Fidalgo <emilio.garcia@uib.es> (University of the Balearic Islands)
-* For more information see: <http://dmi.uib.es/~egarcia>
 *
 * obindex2 is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -18,8 +17,8 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INCLUDE_OBINDEX2_BINARY_TREE_H_
-#define INCLUDE_OBINDEX2_BINARY_TREE_H_
+#ifndef LIB_INCLUDE_OBINDEX2_BINARY_TREE_H_
+#define LIB_INCLUDE_OBINDEX2_BINARY_TREE_H_
 
 #include <stdlib.h>
 #include <time.h>
@@ -88,4 +87,4 @@ typedef std::shared_ptr<BinaryTree> BinaryTreePtr;
 
 }  // namespace obindex2
 
-#endif  // INCLUDE_OBINDEX2_BINARY_TREE_H_
+#endif  // LIB_INCLUDE_OBINDEX2_BINARY_TREE_H_
