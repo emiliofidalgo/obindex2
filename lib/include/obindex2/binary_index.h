@@ -85,7 +85,8 @@ class ImageIndex {
                       const unsigned s = 150,
                       const unsigned t = 4,
                       const MergePolicy merge_policy = MERGE_POLICY_NONE,
-                      const bool purge_descriptors = true);
+                      const bool purge_descriptors = true,
+                      const unsigned min_feat_apps = 3);
 
   // Methods
   void addImage(const unsigned image_id,
@@ -132,6 +133,8 @@ class ImageIndex {
   unsigned ndesc_;
   MergePolicy merge_policy_;
   bool purge_descriptors_;
+  unsigned min_feat_apps_;
+
   std::vector<BinaryTreePtr> trees_;
   std::unordered_map<BinaryDescriptorPtr,
                      std::vector<InvIndexItem> > inv_index_;

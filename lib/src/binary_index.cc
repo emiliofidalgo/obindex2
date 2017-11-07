@@ -25,7 +25,8 @@ ImageIndex::ImageIndex(const unsigned k,
                        const unsigned s,
                        const unsigned t,
                        const MergePolicy merge_policy,
-                       const bool purge_descriptors) :
+                       const bool purge_descriptors,
+                       const unsigned min_feat_apps) :
     k_(k),
     s_(s),
     t_(t),
@@ -33,10 +34,12 @@ ImageIndex::ImageIndex(const unsigned k,
     nimages_(0),
     ndesc_(0),
     merge_policy_(merge_policy),
-    purge_descriptors_(purge_descriptors) {
+    purge_descriptors_(purge_descriptors),
+    min_feat_apps_(min_feat_apps) {
       // Validating the corresponding parameters
       assert(k_ > 1);
       assert(k_ < s_);
+      assert(min_feat_apps > 0);
 }
 
 void ImageIndex::addImage(const unsigned image_id,
@@ -403,7 +406,7 @@ void ImageIndex::purgeDescriptors(const unsigned curr_img) {
     // We assess if at least three images have passed since creation
     if ((curr_img - inv_index_[desc][0].image_id) > 1) {
       // If so, we assess if the feature has been seen at least twice
-      if (inv_index_[desc].size() < 4) {
+      if (inv_index_[desc].size() < min_feat_apps_) {
         deleteDescriptor(desc);
       }
 
