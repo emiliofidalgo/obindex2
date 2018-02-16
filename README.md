@@ -29,6 +29,8 @@ Submitted to IEEE RA-L and IROS 2018
 
 # Installation
 
+## ROS
+
 1. First of all, you have to install the following dependencies:
 
   `sudo apt-get install libboost-system-dev libboost-filesystem-dev`
@@ -38,7 +40,7 @@ Submitted to IEEE RA-L and IROS 2018
   `cd ~/your_workspace/src`<br/>
   `git clone http://github.com/emiliofidalgo/obindex2.git`<br/>
 
-3. Next, compile the package using, as usual, `catkin_make` command:
+3. Next, compile the package using, as usual, the `catkin_make` command:
 
   `cd ..`<br/>
   `catkin_make -DCMAKE_BUILD_TYPE=Release`<br/>
@@ -47,7 +49,27 @@ Submitted to IEEE RA-L and IROS 2018
 
   `rosrun obindex2 test_search /directory/of/images`
 
-5. If you want to use OBIndex as a standalone library, you should follow a standard CMake building process using the `lib` directory:
+## Standalone
+
+1. First of all, you have to install the following dependencies:
+
+  `sudo apt-get install libboost-system-dev libboost-filesystem-dev`
+
+2. You should follow a standard CMake building process using the `lib` directory:
+
+  ```
+
+  git clone http://github.com/emiliofidalgo/obindex2.git<br/>
+  cd obindex2/lib<br/>
+  mkdir build<br/>
+  cmake ..<br/>
+  make -j4<br/>
+
+  ```
+
+3. Finally, you can run an example with:
+
+  `rosrun obindex2 test_search /directory/of/images`
 
 # Usage
 
