@@ -4,7 +4,7 @@ OBIndex2 is an open source C++ library for indexing images. It implements a hier
 
 OBIndex2 is released as a standalone library or ROS package, and relies on OpenCV 3.x and Boost libraries. It can be used with any binary descriptor computed using the OpenCV format.
 
-The library is an evolution of [OBIndex](http://github.com/emiliofidalgo/obindex). The main improvements included are:
+The library is an **evolution** of [OBIndex](http://github.com/emiliofidalgo/obindex). The main improvements included are:
 * OBIndex2 provides a policy for deleting visual words, which reduces the size of the visual vocabulary with little impact on the performance.
 
 * FLANN library is no longer required. This is an implementation from the scratch of the full approach.
@@ -23,13 +23,13 @@ OBindex2 is distributed under the terms of the [GPL3 License](http://github.com/
 
 The details of the algorithm are explained in the following publication:
 
-**iBoW-LCD: An Appearance-based Loop Closure Detection Approach using Incremental Bags of Binary Words**
-Emilio Garcia-Fidalgo and Alberto Ortiz
+**iBoW-LCD: An Appearance-based Loop Closure Detection Approach using Incremental Bags of Binary Words**<br/>
+Emilio Garcia-Fidalgo and Alberto Ortiz<br/>
 Submitted to IEEE RA-L and IROS 2018
 
 # Usage
 
-For an example of use, see the demo file (`lib/tests/test_search.cc`).
+For an example of use, see the demo file `lib/tests/test_search.cc`.
 
 # Contact
 
