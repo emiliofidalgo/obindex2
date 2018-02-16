@@ -72,7 +72,7 @@ Submitted to IEEE RA-L and IROS 2018
 
 3. Finally, you can run an example with:
   ```
-  rosrun obindex2 test_search /directory/of/images
+  ./test_search /directory/of/images
   ```
 
 # Usage
