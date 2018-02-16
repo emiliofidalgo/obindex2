@@ -58,13 +58,11 @@ Submitted to IEEE RA-L and IROS 2018
 2. You should follow a standard CMake building process using the `lib` directory:
 
   ```
-
   git clone http://github.com/emiliofidalgo/obindex2.git
   cd obindex2/lib
   mkdir build
   cmake ..
   make -j4
-
   ```
 
 3. Finally, you can run an example with:
