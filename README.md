@@ -32,42 +32,48 @@ Submitted to IEEE RA-L and IROS 2018
 ## ROS
 
 1. First of all, you have to install the following dependencies:
-
-  `sudo apt-get install libboost-system-dev libboost-filesystem-dev`
+  ```
+  sudo apt-get install libboost-system-dev libboost-filesystem-dev
+  ```
 
 2. If you are going to use the library as a ROS package, clone the repository into your workspace:
-
-  `cd ~/your_workspace/src`<br/>
-  `git clone http://github.com/emiliofidalgo/obindex2.git`<br/>
+  ```
+  cd ~/your_workspace/src
+  git clone http://github.com/emiliofidalgo/obindex2.git
+  ```
 
 3. Next, compile the package using, as usual, the `catkin_make` command:
-
-  `cd ..`<br/>
-  `catkin_make -DCMAKE_BUILD_TYPE=Release`<br/>
+  ```
+  cd ..
+  catkin_make -DCMAKE_BUILD_TYPE=Release
+  ```
 
 4. Finally, you can run an example with:
-
-  `rosrun obindex2 test_search /directory/of/images`
+  ```
+  rosrun obindex2 test_search /directory/of/images
+  ```
 
 ## Standalone
 
 1. First of all, you have to install the following dependencies:
-
-  `sudo apt-get install libboost-system-dev libboost-filesystem-dev`
+  ```
+  sudo apt-get install libboost-system-dev libboost-filesystem-dev
+  ```
 
 2. You should follow a standard CMake building process using the `lib` directory:
-
   ```
   git clone http://github.com/emiliofidalgo/obindex2.git
   cd obindex2/lib
   mkdir build
+  cd build
   cmake ..
   make -j4
   ```
 
 3. Finally, you can run an example with:
-
-  `rosrun obindex2 test_search /directory/of/images`
+  ```
+  rosrun obindex2 test_search /directory/of/images
+  ```
 
 # Usage
 
