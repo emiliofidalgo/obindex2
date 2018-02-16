@@ -33,15 +33,15 @@ Submitted to IEEE RA-L and IROS 2018
 
   `sudo apt-get install libboost-system-dev libboost-filesystem-dev`
 
-2. If you are going to use the library as ROS package, clone the repository into your workspace:
+2. If you are going to use the library as a ROS package, clone the repository into your workspace:
 
-  `cd ~/your_workspace/src`
-  `git clone http://github.com/emiliofidalgo/obindex2.git`
+  `cd ~/your_workspace/src`<br/>
+  `git clone http://github.com/emiliofidalgo/obindex2.git`<br/>
 
-3. Next, compile the package using `catkin_make` as usual:
+3. Next, compile the package using, as usual, `catkin_make` command:
 
-  `cd ..`
-  `catkin_make -DCMAKE_BUILD_TYPE=Release`
+  `cd ..`<br/>
+  `catkin_make -DCMAKE_BUILD_TYPE=Release`<br/>
 
 4. Finally, you can run an example with:
 
