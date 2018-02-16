@@ -59,11 +59,11 @@ Submitted to IEEE RA-L and IROS 2018
 
   ```
 
-  git clone http://github.com/emiliofidalgo/obindex2.git<br/>
-  cd obindex2/lib<br/>
-  mkdir build<br/>
-  cmake ..<br/>
-  make -j4<br/>
+  git clone http://github.com/emiliofidalgo/obindex2.git
+  cd obindex2/lib
+  mkdir build
+  cmake ..
+  make -j4
 
   ```
 
