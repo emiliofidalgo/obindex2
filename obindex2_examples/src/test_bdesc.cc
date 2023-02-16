@@ -21,9 +21,9 @@
 
 #include <opencv2/xfeatures2d.hpp>
 
-#include "catch/catch.hpp"
+#include "catch.hpp"
 
-#include "obindex2/binary_descriptor.h"
+#include <obindex2/binary_descriptor.h>
 
 TEST_CASE("BD: self-created descriptors", "[bdesc]") {
   obindex2::BinaryDescriptor d1, d2;

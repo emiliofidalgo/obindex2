@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model
+   href="http://download.ros.org/schema/package_format3.xsd"
+   schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>obindex2_examples</name>
+  <version>0.1.0</version>
+  <description>This package implements an index of images based on an incremental Binary Bag of Words approach. It can be used to efficiently search for the most similar images in a set.</description>
+
+  <maintainer email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</maintainer>
+  <author email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</author>
+
+  <license>GPL</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <depend>rclcpp</depend>
+  <depend>OpenCV</depend>
+  <depend>obindex2_lib</depend>	 
+
+  <export>
+	  <build_type>ament_cmake</build_type>
+  </export>
+</package>
